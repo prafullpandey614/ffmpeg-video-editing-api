@@ -31,7 +31,7 @@ class FileConvert(APIView):
     def get(self,request,pk):
         
         input_file  = VideoFile.objects.get(id=pk)
-        util_functions.convert('uploads/'+str(input_file.file),'uploads/uploads/output.gif',pk) #this method is defined under util_functions.py   
+        util_functions.convert( 'uploads/'+str(input_file.file) , f'uploads/uploads/output{pk}.gif',pk) #this method is defined under util_functions.py   
     
         
         output_file = VideoFile.objects.get(id=pk)
