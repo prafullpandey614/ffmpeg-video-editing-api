@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from . import util_functions
 from .models import VideoFile
 from .serializers import VideoSerializer
-
+from .tasks import test_func
 
 class ApiOverView(APIView):
     
@@ -30,15 +30,17 @@ class FileConvert(APIView):
     
     def get(self,request,pk):
         
-        input_file  = VideoFile.objects.get(id=pk)
-        util_functions.convert( 'uploads/'+str(input_file.file) , f'uploads/uploads/output{pk}.gif',pk) #this method is defined under util_functions.py   
+        test_func.delay(pk)
+        # input_file  = VideoFile.objects.get(id=pk)
+        # util_functions.convert( 'uploads/'+str(input_file.file) , f'uploads/uploads/output{pk}.gif',pk) 
+        #this method is defined under util_functions.py   
     
         
         output_file = VideoFile.objects.get(id=pk)
         
         
         serializer = VideoSerializer(output_file)
-        # output_file.delete()
+        
         return Response(serializer.data)
         
     

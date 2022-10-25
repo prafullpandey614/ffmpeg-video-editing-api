@@ -1,12 +1,11 @@
 from .models import VideoFile
 from .ffm_converter import FFMConverter
-import sys
-# from .output import output
-# sys.path.append(r'C:\Users\prafu\Desktop\tigbar\videotoanimate\output')
+
+
 
 def convert(input_file,output_file,pk):
     # TODO : Subprocess FFMPEG Commands
-    
+    print("I am here")
     file = FFMConverter()
     file.converter_to_ffm(input_file,output_file)
 
