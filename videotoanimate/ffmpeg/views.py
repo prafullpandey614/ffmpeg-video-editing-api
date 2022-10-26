@@ -1,12 +1,10 @@
 from rest_framework.response import Response
-from rest_framework import viewsets
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView , RetrieveAPIView
 from rest_framework.decorators import api_view
-from . import util_functions
 from .models import VideoFile
 from .serializers import VideoSerializer
-from .tasks import test_func
+from .tasks import Converter
 
 class ApiOverView(APIView):
     
@@ -30,20 +28,16 @@ class FileConvert(APIView):
     
     def get(self,request,pk):
         
-        test_func.delay(pk)
-        # input_file  = VideoFile.objects.get(id=pk)
-        # util_functions.convert( 'uploads/'+str(input_file.file) , f'uploads/uploads/output{pk}.gif',pk) 
-        #this method is defined under util_functions.py   
+        Converter.delay(pk) #Celery Worker will do the tasks
+        return Response("Hold On! Video Transcoding in process")
     
-        
-        output_file = VideoFile.objects.get(id=pk)
-        
-        
-        serializer = VideoSerializer(output_file)
-        
-        return Response(serializer.data)
-        
     
+class RetrieveFileView(RetrieveAPIView):
+    queryset = VideoFile.objects.all()
+    serializer_class = VideoSerializer
+    
+    def get(self, request, pk):
+        return self.retrieve(request, pk) 
 
     
     
